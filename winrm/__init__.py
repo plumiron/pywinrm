@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import re
+import sys
 from base64 import b64encode
 import xml.etree.ElementTree as ET
 
@@ -51,7 +52,10 @@ class Session(object):
         if len(rs.std_err):
             # if there was an error message, clean it it up and make it human
             # readable
-            rs.std_err = self._clean_error_msg(rs.std_err)
+            if sys.version_info >= (3,):
+                rs.std_err = self._clean_error_msg(rs.std_err.decode('utf-8'))
+            else:
+                rs.std_err = self._clean_error_msg(rs.std_err)
         return rs
 
     def _clean_error_msg(self, msg):
